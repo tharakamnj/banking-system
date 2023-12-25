@@ -4,12 +4,16 @@ import com.nmm.banking.dto.AuthenticationRequest;
 import com.nmm.banking.dto.UserDto;
 import com.nmm.banking.security.JwtUtil;
 import com.nmm.banking.service.UserService;
+import com.nmm.banking.util.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 
 @Slf4j
 @CrossOrigin("*")
@@ -30,15 +34,22 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/authenticate")
-	public String generateToken(@RequestBody AuthenticationRequest dto) throws Exception {
-
+	public ResponseEntity<CommonResponse> generateToken(@RequestBody AuthenticationRequest dto) throws Exception {
+		CommonResponse commonResponse = new CommonResponse();
 		try {
+			// Authenticate the user
 			authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(dto.getUserName(),dto.getPassword()));
-		}catch (Exception ex){
-			throw new Exception("invalid username or password...");
+					new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
+		} catch (Exception ex) {
+			// Handle authentication failure
+			throw new Exception("Invalid username or password...");
 		}
-		return jwtUtil.generateToken(dto.getUserName());
+
+		// Generate and return JWT token on successful authentication
+		String token = jwtUtil.generateToken(dto.getUsername());
+		commonResponse.setPayload(Collections.singletonList(token));
+		return new ResponseEntity<>(commonResponse, HttpStatus.CREATED);
+
 	}
 
 	/**
