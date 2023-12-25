@@ -1,5 +1,6 @@
 package com.nmm.banking.entity;
 
+import com.nmm.banking.util.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class User {
 
     private String userName;
     private String password;
+    private Role role;
     private boolean status;
 
     private String createdBy;
@@ -39,11 +41,5 @@ public class User {
     private String modifiedBy;
 
     private Date modifiedDate;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "User_Id"),
-            inverseJoinColumns = @JoinColumn(name = "Role_id"))
-    private List<Role> roles;
 
 }

@@ -4,7 +4,9 @@ import com.nmm.banking.dto.UserDto;
 import com.nmm.banking.entity.User;
 import com.nmm.banking.repository.UserRepository;
 import com.nmm.banking.service.UserService;
+import com.nmm.banking.util.CommonConst;
 import com.nmm.banking.util.CommonResponse;
+import com.nmm.banking.util.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,11 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private EmailServiceImpl emailService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, EmailServiceImpl emailService) {
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     /**
@@ -29,7 +33,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public ResponseEntity<?> saveUser(UserDto dto) {
+    public ResponseEntity<CommonResponse> saveUser(UserDto dto) {
         log.info("Start saveUser method with UserDTO: " + dto);
         CommonResponse commonResponse = new CommonResponse();
         /*if (isUserByUserName(dto.getUserName())) {
@@ -49,17 +53,38 @@ public class UserServiceImpl implements UserService {
                 dto.getMobile(),
                 dto.getUserName(),
                 dto.getPassword(),
+                dto.getRole(),
                 dto.isStatus(),
                 dto.getCreatedBy(),
                 new Date(),
-                dto.getCreatedBy(),
-                new Date(),
-                null
+                dto.getModifiedBy(),
+                new Date()
         ));
+
+        //send an email
+        emailService.sendEmail(user.getEmail(),null,
+                "registration successfully.");
+
         //commonResponse.setPayload(Collections.singletonList(this.convertToDto(user)));
         commonResponse.setPayload(Collections.singletonList(user));
         commonResponse.setStatus(1);
         log.info("End saveUser method");
         return new ResponseEntity<>(commonResponse, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<CommonResponse> getAllUsersByRole(Role role) {
+        log.info("Start getAllUsersByRole method");
+        CommonResponse commonResponse = new CommonResponse();
+        List<User> users = userRepository.findByRole(role);
+        if (users.isEmpty()){
+            commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
+            commonResponse.setErrorMessages(Collections.singletonList("Not found users"));
+            return new ResponseEntity<>(commonResponse,HttpStatus.NOT_FOUND);
+        }
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        commonResponse.setPayload(Collections.singletonList(users));
+        log.info("End getAllUsersByRole method");
+        return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }
 }

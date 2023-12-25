@@ -1,6 +1,6 @@
 package com.nmm.banking.dto;
 
-import com.nmm.banking.entity.Role;
+import com.nmm.banking.util.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +27,7 @@ public class UserDto {
 
     private String userName;
     private String password;
+    private Role role;
     private boolean status;
 
     private String createdBy;
@@ -36,5 +37,4 @@ public class UserDto {
     private String modifiedBy;
 
     private Date modifiedDate;
-    private List<Role> roles;
 }
