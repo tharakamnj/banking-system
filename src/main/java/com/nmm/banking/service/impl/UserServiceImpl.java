@@ -6,22 +6,21 @@ import com.nmm.banking.repository.UserRepository;
 import com.nmm.banking.service.UserService;
 import com.nmm.banking.util.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /**
      * This method use for user registration
@@ -30,7 +29,6 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    @Transactional
     public ResponseEntity<?> saveUser(UserDto dto) {
         log.info("Start saveUser method with UserDTO: " + dto);
         CommonResponse commonResponse = new CommonResponse();
