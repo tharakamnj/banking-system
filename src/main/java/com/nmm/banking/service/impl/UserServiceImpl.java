@@ -8,8 +8,10 @@ import com.nmm.banking.util.CommonConst;
 import com.nmm.banking.util.CommonResponse;
 import com.nmm.banking.util.Role;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private EmailServiceImpl emailService;
+
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
 
     public UserServiceImpl(UserRepository userRepository, EmailServiceImpl emailService) {
         this.userRepository = userRepository;
@@ -43,22 +48,22 @@ public class UserServiceImpl implements UserService {
         }*/
 
         User user = userRepository.save(new User(
-                dto.getUserId(),
-                dto.getTitle(),
-                dto.getFirstName(),
-                dto.getMiddleName(),
-                dto.getLastName(),
-                dto.getNic(),
-                dto.getEmail(),
-                dto.getMobile(),
-                dto.getUserName(),
-                dto.getPassword(),
-                dto.getRole(),
-                dto.isStatus(),
-                dto.getCreatedBy(),
-                new Date(),
-                dto.getModifiedBy(),
-                new Date()
+                    dto.getUserId(),
+                    dto.getTitle(),
+                    dto.getFirstName(),
+                    dto.getMiddleName(),
+                    dto.getLastName(),
+                    dto.getNic(),
+                    dto.getEmail(),
+                    dto.getMobile(),
+                    dto.getUserName(),
+                    bcryptEncoder.encode(dto.getPassword()),
+                    dto.getRole(),
+                    dto.isStatus(),
+                    dto.getCreatedBy(),
+                    new Date(),
+                    dto.getModifiedBy(),
+                    new Date()
         ));
 
         //send an email
