@@ -9,8 +9,10 @@ import com.nmm.banking.util.CommonResponse;
 import com.nmm.banking.util.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,10 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private EmailServiceImpl emailService;
 
-    @Autowired
-    private PasswordEncoder bcryptEncoder;
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     public UserServiceImpl(UserRepository userRepository, EmailServiceImpl emailService) {
         this.userRepository = userRepository;
@@ -57,7 +61,7 @@ public class UserServiceImpl implements UserService {
                     dto.getEmail(),
                     dto.getMobile(),
                     dto.getUserName(),
-                    bcryptEncoder.encode(dto.getPassword()),
+                    bCryptPasswordEncoder().encode(dto.getPassword()),
                     dto.getRole(),
                     dto.isStatus(),
                     dto.getCreatedBy(),
@@ -65,6 +69,8 @@ public class UserServiceImpl implements UserService {
                     dto.getModifiedBy(),
                     new Date()
         ));
+
+        System.out.println(user.getPassword());
 
         //send an email
         emailService.sendEmail(user.getEmail(),null,

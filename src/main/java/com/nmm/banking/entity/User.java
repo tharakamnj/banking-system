@@ -16,6 +16,7 @@ import java.util.List;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int userId;
 
     private String title;

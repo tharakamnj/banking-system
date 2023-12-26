@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 public class Branch {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int branchId;
     private String name;
     private String code;
