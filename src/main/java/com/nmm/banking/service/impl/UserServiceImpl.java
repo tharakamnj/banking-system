@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
                     dto.getMobile(),
                     dto.getUserName(),
                     bCryptPasswordEncoder().encode(dto.getPassword()),
-                    dto.getRole(),
+                    dto.getRoles(),
                     dto.isStatus(),
                     dto.getCreatedBy(),
                     new Date(),
