@@ -27,7 +27,7 @@ public class UserDto {
 
     private String userName;
     private String password;
-    private Role role;
+    private Role roles;
     private boolean status;
 
     public UserDto(int userId, String title, String firstName, String middleName, String lastName, String nic,
@@ -42,7 +42,7 @@ public class UserDto {
         this.email = email;
         this.mobile = mobile;
         this.userName = userName;
-        this.role = role;
+        this.roles = role;
         this.status = status;
         this.createdBy = createdBy;
         this.createdDate = createdDate;

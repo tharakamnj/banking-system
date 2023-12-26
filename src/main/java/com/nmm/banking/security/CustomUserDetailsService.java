@@ -50,7 +50,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getEmail(),
                 user.getMobile(),
                 user.getUserName(),
-                user.getRole(),
+                user.getRoles(),
                 user.isStatus(),
                 user.getCreatedBy(),
                 user.getCreatedDate(),

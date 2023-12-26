@@ -16,7 +16,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int userId;
 
     private String title;
@@ -32,7 +32,7 @@ public class User {
 
     private String userName;
     private String password;
-    private Role role;
+    private Role roles;
     private boolean status;
 
     private String createdBy;
