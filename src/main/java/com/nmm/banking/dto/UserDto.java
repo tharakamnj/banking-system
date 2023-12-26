@@ -42,7 +42,7 @@ public class UserDto {
         this.email = email;
         this.mobile = mobile;
         this.userName = userName;
-        this.role = role;
+        this.roles = role;
         this.status = status;
         this.createdBy = createdBy;
         this.createdDate = createdDate;

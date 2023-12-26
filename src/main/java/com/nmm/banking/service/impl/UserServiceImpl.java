@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private EmailServiceImpl emailService;
 
+
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
@@ -46,6 +47,8 @@ public class UserServiceImpl implements UserService {
             commonResponse.setErrorMessages(Collections.singletonList("username already exist."));
             return new ResponseEntity<>(commonResponse, HttpStatus.CONFLICT);
         }*/
+
+        System.out.println( bcryptEncoder.encode(dto.getPassword()));
 
         User user = userRepository.save(new User(
                     dto.getUserId(),
@@ -81,7 +84,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<CommonResponse> getAllUsersByRole(Role role) {
         log.info("Start getAllUsersByRole method");
         CommonResponse commonResponse = new CommonResponse();
-        List<User> users = userRepository.findByRole(role);
+        List<User> users = userRepository.findByRoles(role);
         if (users.isEmpty()){
             commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
             commonResponse.setErrorMessages(Collections.singletonList("Not found users"));

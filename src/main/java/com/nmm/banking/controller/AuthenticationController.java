@@ -45,12 +45,12 @@ public class AuthenticationController {
 		AuthResponse authResponse = new AuthResponse();
 		try {
 			authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(dto.getUserName(),dto.getPassword()));
+					new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword()));
 		}catch (Exception ex){
 			throw new Exception("invalid username or password...");
 		}
-		String token = jwtUtil.generateToken(dto.getUserName());
-		UserDto user = customUserDetailsService.userDetails(dto.getUserName());
+		String token = jwtUtil.generateToken(dto.getUsername());
+		UserDto user = customUserDetailsService.userDetails(dto.getUsername());
 		authResponse.setToken(token);
 		authResponse.setUser(user);
 
