@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
                 dto.getMobile(),
                 dto.getUserName(),
                 dto.getPassword(),
-                dto.getRole(),
+                dto.getRoles(),
                 dto.isStatus(),
                 dto.getCreatedBy(),
                 new Date(),
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<CommonResponse> getAllUsersByRole(Role role) {
         log.info("Start getAllUsersByRole method");
         CommonResponse commonResponse = new CommonResponse();
-        List<User> users = userRepository.findByRole(role);
+        List<User> users = userRepository.findByRoles(role);
         if (users.isEmpty()){
             commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
             commonResponse.setErrorMessages(Collections.singletonList("Not found users"));
@@ -85,6 +85,22 @@ public class UserServiceImpl implements UserService {
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
         commonResponse.setPayload(Collections.singletonList(users));
         log.info("End getAllUsersByRole method");
+        return new ResponseEntity<>(commonResponse,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getBranchManagerById(Integer branchManagerId) {
+        log.info("Start getBranchManagerById method");
+        CommonResponse commonResponse = new CommonResponse();
+        User user = userRepository.findById(branchManagerId).get();
+        if (user==null){
+            commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
+            commonResponse.setErrorMessages(Collections.singletonList("Not found users"));
+            return new ResponseEntity<>(commonResponse,HttpStatus.NOT_FOUND);
+        }
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        commonResponse.setPayload(Collections.singletonList(user));
+        log.info("End getBranchManagerById method");
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }
 }

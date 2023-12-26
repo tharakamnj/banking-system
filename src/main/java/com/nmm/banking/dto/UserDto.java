@@ -27,7 +27,7 @@ public class UserDto {
 
     private String userName;
     private String password;
-    private Role role;
+    private Role roles;
     private boolean status;
 
     private String createdBy;

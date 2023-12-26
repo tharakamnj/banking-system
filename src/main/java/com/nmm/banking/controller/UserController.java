@@ -38,4 +38,23 @@ public class UserController {
         log.info("End getAllUsersByRole method");
         return responseEntity;
     }
+
+    @GetMapping("/branchManager/{branchManagerId}")
+    public ResponseEntity<?> getBranchManagerById(@PathVariable("branchManagerId") Integer branchManagerId) {
+        log.info("Start getBranchManagerById method");
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            ResponseEntity<?> bank = userService.getBranchManagerById(branchManagerId);
+            commonResponse.setPayload(Collections.singletonList(bank));
+            return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            commonResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            commonResponse.setErrorMessages(Collections.singletonList(e.getMessage()));
+            log.error("Error occurred while calling the getBankByCode Method : " + e.getMessage());
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+
+
+    }
 }

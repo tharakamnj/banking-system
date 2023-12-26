@@ -10,4 +10,6 @@ public interface UserService {
     ResponseEntity<?> saveUser(UserDto dto);
 
     ResponseEntity<CommonResponse> getAllUsersByRole(Role role);
+
+    ResponseEntity<?> getBranchManagerById(Integer branchManagerId);
 }
