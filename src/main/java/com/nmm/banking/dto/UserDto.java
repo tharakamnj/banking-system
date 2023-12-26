@@ -30,6 +30,26 @@ public class UserDto {
     private Role roles;
     private boolean status;
 
+    public UserDto(int userId, String title, String firstName, String middleName, String lastName, String nic,
+                   String email, String mobile, String userName, Role role, boolean status, String createdBy,
+                   Date createdDate, String modifiedBy, Date modifiedDate) {
+        this.userId = userId;
+        this.title = title;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.nic = nic;
+        this.email = email;
+        this.mobile = mobile;
+        this.userName = userName;
+        this.role = role;
+        this.status = status;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+        this.modifiedBy = modifiedBy;
+        this.modifiedDate = modifiedDate;
+    }
+
     private String createdBy;
 
     private Date createdDate;

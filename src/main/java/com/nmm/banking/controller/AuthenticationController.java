@@ -1,9 +1,12 @@
 package com.nmm.banking.controller;
 
+import com.nmm.banking.dto.AuthResponse;
 import com.nmm.banking.dto.AuthenticationRequest;
 import com.nmm.banking.dto.UserDto;
+import com.nmm.banking.security.CustomUserDetailsService;
 import com.nmm.banking.security.JwtUtil;
 import com.nmm.banking.service.UserService;
+import com.nmm.banking.util.CommonConst;
 import com.nmm.banking.util.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,26 +32,31 @@ public class AuthenticationController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	public AuthenticationController(UserService userService) {
+	private CustomUserDetailsService customUserDetailsService;
+
+	public AuthenticationController(UserService userService, CustomUserDetailsService customUserDetailsService) {
 		this.userService = userService;
+		this.customUserDetailsService = customUserDetailsService;
 	}
 
 	@PostMapping("/authenticate")
 	public ResponseEntity<CommonResponse> generateToken(@RequestBody AuthenticationRequest dto) throws Exception {
 		CommonResponse commonResponse = new CommonResponse();
+		AuthResponse authResponse = new AuthResponse();
 		try {
-			// Authenticate the user
 			authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword()));
-		} catch (Exception ex) {
-			// Handle authentication failure
-			throw new Exception("Invalid username or password...");
+					new UsernamePasswordAuthenticationToken(dto.getUserName(),dto.getPassword()));
+		}catch (Exception ex){
+			throw new Exception("invalid username or password...");
 		}
+		String token = jwtUtil.generateToken(dto.getUserName());
+		UserDto user = customUserDetailsService.userDetails(dto.getUserName());
+		authResponse.setToken(token);
+		authResponse.setUser(user);
 
-		// Generate and return JWT token on successful authentication
-		String token = jwtUtil.generateToken(dto.getUsername());
-		commonResponse.setPayload(Collections.singletonList(token));
-		return new ResponseEntity<>(commonResponse, HttpStatus.CREATED);
+		commonResponse.setPayload(Collections.singletonList(authResponse));
+		commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+		return new ResponseEntity<>(commonResponse, HttpStatus.OK);
 
 	}
 
