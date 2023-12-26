@@ -3,9 +3,11 @@ package com.nmm.banking.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +16,23 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    private String secret = "jwt example";
+    private String secret;
+
+    private int jwtExpirationInMs;
+
+    private static final String PRIVILEGE = "privilege";
+
+    public static final String USER_NAME = "username";
+
+    @Value("${jwt.secret}")
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    @Value("${jwt.expirationDateInMs}")
+    public void setJwtExpirationInMs(int jwtExpirationInMs) {
+        this.jwtExpirationInMs = jwtExpirationInMs;
+    }
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
@@ -50,15 +68,23 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    public String generateToken(String username){
-        Map<String,Object> claims = new HashMap<>();
-        return createToken(claims,username);
+    public String generateToken(UserDetails userDetails) {
+        Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
+        claims.put(USER_NAME, userDetails.getUsername() + "");
+        claims.put(PRIVILEGE, userDetails.getAuthorities());
+
+        return createToken(claims, userDetails.getUsername());
     }
 
     private String createToken(Map<String,Object> claims,String subject){ //====== subject is username
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 2))
-                .signWith(SignatureAlgorithm.HS256, secret).compact();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, 24);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setExpiration(cal.getTime())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails){

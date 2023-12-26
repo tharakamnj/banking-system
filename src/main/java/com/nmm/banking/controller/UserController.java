@@ -55,6 +55,22 @@ public class UserController {
             return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
         }
 
+    }
 
+    @GetMapping("/activeManagers")
+    public ResponseEntity<CommonResponse> getActiveManagers(){
+        log.info("Start getActiveManagers method");
+        ResponseEntity<CommonResponse> responseEntity = null;
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            responseEntity = userService.getActiveManagers();
+        } catch (Exception ex) {
+            commonResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            log.error(ex.getMessage());
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        log.info("End getActiveManagers method");
+        return responseEntity;
     }
 }

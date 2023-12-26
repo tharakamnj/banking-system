@@ -1,5 +1,6 @@
 package com.nmm.banking.service;
 
+import com.nmm.banking.dto.AuthenticationRequest;
 import com.nmm.banking.dto.UserDto;
 import com.nmm.banking.util.CommonResponse;
 import com.nmm.banking.util.Role;
@@ -12,4 +13,8 @@ public interface UserService {
     ResponseEntity<CommonResponse> getAllUsersByRole(Role role);
 
     ResponseEntity<?> getBranchManagerById(Integer branchManagerId);
+
+    ResponseEntity<CommonResponse> createAuthnticationToken(AuthenticationRequest authenticationRequest);
+
+    ResponseEntity<CommonResponse> getActiveManagers();
 }

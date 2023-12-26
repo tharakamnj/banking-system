@@ -11,11 +11,13 @@ import com.nmm.banking.util.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 
 @Slf4j
@@ -26,38 +28,14 @@ public class AuthenticationController {
 
 	private UserService userService;
 
-	@Autowired
-	private JwtUtil jwtUtil;
-
-	@Autowired
-	private AuthenticationManager authenticationManager;
-
-	private CustomUserDetailsService customUserDetailsService;
-
-	public AuthenticationController(UserService userService, CustomUserDetailsService customUserDetailsService) {
+	public AuthenticationController(UserService userService) {
 		this.userService = userService;
-		this.customUserDetailsService = customUserDetailsService;
 	}
 
-	@PostMapping("/authenticate")
-	public ResponseEntity<CommonResponse> generateToken(@RequestBody AuthenticationRequest dto) throws Exception {
-		CommonResponse commonResponse = new CommonResponse();
-		AuthResponse authResponse = new AuthResponse();
-		try {
-			authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(dto.getUsername(),dto.getPassword()));
-		}catch (Exception ex){
-			throw new Exception("invalid username or password...");
-		}
-		String token = jwtUtil.generateToken(dto.getUsername());
-		UserDto user = customUserDetailsService.userDetails(dto.getUsername());
-		authResponse.setToken(token);
-		authResponse.setUser(user);
 
-		commonResponse.setPayload(Collections.singletonList(authResponse));
-		commonResponse.setStatus(CommonConst.SUCCESS_CODE);
-		return new ResponseEntity<>(commonResponse, HttpStatus.OK);
-
+	@PostMapping(value = "/authenticate", produces = MediaType.APPLICATION_JSON_VALUE ,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<CommonResponse> createAuthenticationToken(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
+		return userService.createAuthnticationToken(authenticationRequest);
 	}
 
 	/**
