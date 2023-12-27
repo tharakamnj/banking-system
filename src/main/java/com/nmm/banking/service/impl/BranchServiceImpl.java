@@ -34,19 +34,22 @@ public class BranchServiceImpl implements BranchService {
         log.info("Start saveBranch method with BranchDto: " + dto);
         CommonResponse commonResponse = new CommonResponse();
 
-        User user = userRepository.findById(dto.getUserId()).get();
+        User user = userRepository.findById(dto.getBranchManager().getUserId()).get();
 
         Branch branch = branchRepository.save(
                 new Branch(
                         dto.getBranchId(),
-                        dto.getName(),
-                        dto.getCode(),
+                        dto.getBankName(),
+                        dto.getBankCode(),
+                        dto.getBankDesc(),
                         user,
                         dto.getWebsite(),
-                        dto.getAddress(),
+                        dto.getBankAddress(),
                         dto.getEmail(),
                         dto.getPhone(),
-                        dto.getCurrency()
+                        dto.getCurrency(),
+                        dto.getCountry(),
+                        dto.isStatus()
                 ));
 
 
@@ -68,6 +71,22 @@ public class BranchServiceImpl implements BranchService {
         }
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
         commonResponse.setPayload(Collections.singletonList(branches));
+        log.info("End findAllBranches method");
+        return new ResponseEntity<>(commonResponse,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CommonResponse> findBranchById(Integer branchId) {
+        log.info("Start findAllBranches method");
+        CommonResponse commonResponse = new CommonResponse();
+        Branch branch = branchRepository.findById(branchId).get();
+        if (branch==null){
+            commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
+            commonResponse.setErrorMessages(Collections.singletonList("Not found branch"));
+            return new ResponseEntity<>(commonResponse,HttpStatus.NOT_FOUND);
+        }
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        commonResponse.setPayload(Collections.singletonList(branch));
         log.info("End findAllBranches method");
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }

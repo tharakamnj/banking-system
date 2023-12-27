@@ -12,17 +12,24 @@ import javax.persistence.*;
 @Entity
 public class Branch {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int branchId;
-    private String name;
-    private String code;
+    private String bankName;
+    private String bankCode;
+    private  String bankDesc;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
-    private User user;
+    private User branchManager;
     private String website;
-    private String address;
+    private String bankAddress;
     private String email;
     private String phone;
     private String currency;
+    private String country;
+    private boolean status;
+
+
+
+
 
 }

@@ -8,4 +8,6 @@ public interface BranchService {
     ResponseEntity<CommonResponse> saveBranch(BranchDto dto);
 
     ResponseEntity<CommonResponse> findAllBranches();
+
+    ResponseEntity<CommonResponse> findBranchById(Integer branchId);
 }

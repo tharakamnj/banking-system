@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         User user = new User();
         try {
-            user = userRepository.findUserByUserName(username);
+            user = userRepository.findByUserName(username);
             grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + user.getRoles());
 
         }catch (Exception e){
@@ -44,7 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public UserDto userDetails(String userName){
-       User user = userRepository.findUserByUserName(userName);
+       User user = userRepository.findByUserName(userName);
         UserDto userDto = new UserDto(
                 user.getUserId(),
                 user.getTitle(),
