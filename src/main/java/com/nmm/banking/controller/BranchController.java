@@ -40,6 +40,24 @@ public class BranchController {
         return responseEntity;
     }
 
+
+    @GetMapping("/branch/{branchId}")
+    public ResponseEntity<CommonResponse> findBranchById(@PathVariable("branchId") Integer branchId){
+        log.info("Start findAllBranches method");
+        ResponseEntity<CommonResponse> responseEntity = null;
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            responseEntity = branchService.findBranchById(branchId);
+        } catch (Exception ex) {
+            commonResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            log.error(ex.getMessage());
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        log.info("End findAllBranches method");
+        return responseEntity;
+    }
+
     @GetMapping("/branches")
     public ResponseEntity<CommonResponse> findAllBranches(){
         log.info("Start findAllBranches method");
