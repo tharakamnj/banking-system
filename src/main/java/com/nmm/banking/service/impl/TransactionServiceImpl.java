@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         Account account = accountRepository.findById(dto.getAccount()).get();
 
-        Transaction existingTransaction = transactionRepository.findByAccountIdAndTopByOrderByDateDesc(account.getAccountId());
+        Transaction existingTransaction = Collections.max(transactionRepository.findByAccountId(account.getAccountId()),
+                Comparator.comparing(Transaction::getDate));
 
         Transaction transaction = transactionRepository.save(new Transaction(
                 dto.getTransactionId(),
@@ -64,7 +66,8 @@ public class TransactionServiceImpl implements TransactionService {
         CommonResponse commonResponse = new CommonResponse();
 
         List<Transaction> existingTransactions = transactionRepository.findByAccountId(accountId);
-        
+        Collections.sort(existingTransactions, Comparator.comparing(Transaction::getDate));
+
         commonResponse.setPayload(Collections.singletonList(existingTransactions));
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
         log.info("End findAllTransactionByAccount method");
