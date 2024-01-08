@@ -8,6 +8,7 @@ import com.nmm.banking.repository.AccountRepository;
 import com.nmm.banking.repository.BranchRepository;
 import com.nmm.banking.repository.UserRepository;
 import com.nmm.banking.service.AccountService;
+import com.nmm.banking.util.CommonConst;
 import com.nmm.banking.util.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,7 @@ public class AccountServiceImpl implements AccountService {
                 dto.getAccountNo(),
                 dto.getIfscCode(),
                 dto.getType(),
+                dto.getAvailableBalance(),
                 dto.isStatus(),
                 user,
                 branch,
@@ -59,5 +61,17 @@ public class AccountServiceImpl implements AccountService {
         commonResponse.setStatus(1);
         log.info("End saveAccount method");
         return new ResponseEntity<>(commonResponse, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<CommonResponse> findAccount(int id) {
+        log.info("Start findAccount method ");
+        CommonResponse commonResponse = new CommonResponse();
+        Account account = accountRepository.findById(id).get();
+
+        commonResponse.setPayload(Collections.singletonList(account));
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        log.info("End findAccount method");
+        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
     }
 }

@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface AccountService {
     ResponseEntity<CommonResponse> saveAccount(AccountDto dto);
+
+    ResponseEntity<CommonResponse> findAccount(int id);
 }

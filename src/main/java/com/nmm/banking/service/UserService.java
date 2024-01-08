@@ -17,4 +17,6 @@ public interface UserService {
     ResponseEntity<CommonResponse> createAuthnticationToken(AuthenticationRequest authenticationRequest);
 
     ResponseEntity<CommonResponse> getActiveManagers();
+
+    ResponseEntity<CommonResponse> getCustomersWithAccount();
 }
