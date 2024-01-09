@@ -4,6 +4,7 @@ import com.nmm.banking.dto.AuthResponse;
 import com.nmm.banking.dto.AuthenticationRequest;
 import com.nmm.banking.dto.UserDto;
 import com.nmm.banking.entity.User;
+import com.nmm.banking.repository.AccountRepository;
 import com.nmm.banking.repository.UserRepository;
 import com.nmm.banking.security.CustomUserDetailsService;
 import com.nmm.banking.security.JwtUtil;
@@ -35,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
     private CustomUserDetailsService customUserDetailsService;
 
+    private AccountRepository accountRepository;
+
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -46,10 +49,11 @@ public class UserServiceImpl implements UserService {
         return new BCryptPasswordEncoder();
     }
 
-    public UserServiceImpl(UserRepository userRepository, EmailServiceImpl emailService, CustomUserDetailsService customUserDetailsService) {
+    public UserServiceImpl(UserRepository userRepository, EmailServiceImpl emailService, CustomUserDetailsService customUserDetailsService, AccountRepository accountRepository) {
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.customUserDetailsService = customUserDetailsService;
+        this.accountRepository = accountRepository;
     }
 
     /**
@@ -171,6 +175,23 @@ public class UserServiceImpl implements UserService {
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
         commonResponse.setPayload(Collections.singletonList(users));
         log.info("End getActiveManagers method");
+        return new ResponseEntity<>(commonResponse,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CommonResponse> getCustomersWithAccount() {
+        log.info("Start getCustomersWithAccount method");
+        CommonResponse commonResponse = new CommonResponse();
+        Set<Integer> ids = accountRepository.findAllUserIds();
+        List<User> users = userRepository.findAllById(ids);
+        if (users.isEmpty()){
+            commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
+            commonResponse.setErrorMessages(Collections.singletonList("Not found customers"));
+            return new ResponseEntity<>(commonResponse,HttpStatus.NOT_FOUND);
+        }
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        commonResponse.setPayload(Collections.singletonList(users));
+        log.info("End getCustomersWithAccount method");
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }
 }

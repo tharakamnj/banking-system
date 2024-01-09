@@ -19,6 +19,7 @@ public class Account {
     private String accountNo;
     private String ifscCode;
     private String type;
+    private double availableBalance;
     private boolean status;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")

@@ -14,6 +14,7 @@ public class AccountDto {
     private String accountNo;
     private String ifscCode;
     private String type;
+    private double availableBalance;
     private boolean status;
     private String userId;
     private String createdBy;

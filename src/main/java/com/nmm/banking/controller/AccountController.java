@@ -38,4 +38,21 @@ public class AccountController {
         log.info("End saveAccount method");
         return responseEntity;
     }
+
+    @PostMapping("/account/{id}")
+    public ResponseEntity<CommonResponse> findAccount(@PathVariable("id") int id){
+        log.info("Start findAccount method with id: " + id);
+        ResponseEntity<CommonResponse> responseEntity = null;
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            responseEntity = accountService.findAccount(id);
+        } catch (Exception ex) {
+            commonResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            log.error(ex.getMessage());
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        log.info("End findAccount method");
+        return responseEntity;
+    }
 }

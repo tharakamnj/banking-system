@@ -73,4 +73,21 @@ public class UserController {
         log.info("End getActiveManagers method");
         return responseEntity;
     }
+
+    @GetMapping("/customers")
+    public ResponseEntity<CommonResponse> getCustomersWithAccount(){
+        log.info("Start getCustomersWithAccount method");
+        ResponseEntity<CommonResponse> responseEntity = null;
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            responseEntity = userService.getCustomersWithAccount();
+        } catch (Exception ex) {
+            commonResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            log.error(ex.getMessage());
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        log.info("End getCustomersWithAccount method");
+        return responseEntity;
+    }
 }
