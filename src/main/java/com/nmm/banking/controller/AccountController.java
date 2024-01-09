@@ -39,7 +39,7 @@ public class AccountController {
         return responseEntity;
     }
 
-    @PostMapping("/account/{id}")
+    @GetMapping("/account/{id}")
     public ResponseEntity<CommonResponse> findAccount(@PathVariable("id") int id){
         log.info("Start findAccount method with id: " + id);
         ResponseEntity<CommonResponse> responseEntity = null;
@@ -55,4 +55,22 @@ public class AccountController {
         log.info("End findAccount method");
         return responseEntity;
     }
+
+    @GetMapping("/account/{userId}")
+    public ResponseEntity<CommonResponse> findAccountByUser(@PathVariable("userId") int userId){
+        log.info("Start findAccountByUser method with id: " + userId);
+        ResponseEntity<CommonResponse> responseEntity = null;
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            responseEntity = accountService.findAccountByUser(userId);
+        } catch (Exception ex) {
+            commonResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            log.error(ex.getMessage());
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        log.info("End findAccountByUser method");
+        return responseEntity;
+    }
+
 }

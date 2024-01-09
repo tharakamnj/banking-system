@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
                     encoder().encode(dto.getPassword()),
                     dto.getRoles(),
                     dto.isStatus(),
+                    false,
                     dto.getCreatedBy(),
                     new Date(),
                     dto.getModifiedBy(),
@@ -192,6 +193,22 @@ public class UserServiceImpl implements UserService {
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
         commonResponse.setPayload(Collections.singletonList(users));
         log.info("End getCustomersWithAccount method");
+        return new ResponseEntity<>(commonResponse,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CommonResponse> getUserById(int id) {
+        log.info("Start getUserById method");
+        CommonResponse commonResponse = new CommonResponse();
+        User user = userRepository.findById(id).get();
+        if (user==null){
+            commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
+            commonResponse.setErrorMessages(Collections.singletonList("Not found users"));
+            return new ResponseEntity<>(commonResponse,HttpStatus.NOT_FOUND);
+        }
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        commonResponse.setPayload(Collections.singletonList(user));
+        log.info("End getUserById method");
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }
 }

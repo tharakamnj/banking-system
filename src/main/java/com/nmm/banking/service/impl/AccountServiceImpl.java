@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Date;
 
@@ -35,6 +36,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<CommonResponse> saveAccount(AccountDto dto) {
         log.info("Start saveAccount method with AccountDto: " + dto);
         CommonResponse commonResponse = new CommonResponse();
@@ -56,6 +58,9 @@ public class AccountServiceImpl implements AccountService {
                 dto.getModifiedBy(),
                 new Date()));
 
+        user.setAccount(true);
+        userRepository.save(user);
+
 
         commonResponse.setPayload(Collections.singletonList(account));
         commonResponse.setStatus(1);
@@ -68,6 +73,18 @@ public class AccountServiceImpl implements AccountService {
         log.info("Start findAccount method ");
         CommonResponse commonResponse = new CommonResponse();
         Account account = accountRepository.findById(id).get();
+
+        commonResponse.setPayload(Collections.singletonList(account));
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        log.info("End findAccount method");
+        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CommonResponse> findAccountByUser(int userId) {
+        log.info("Start findAccount method ");
+        CommonResponse commonResponse = new CommonResponse();
+        Account account = accountRepository.findAccountByUser(userId);
 
         commonResponse.setPayload(Collections.singletonList(account));
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
