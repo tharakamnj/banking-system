@@ -90,4 +90,21 @@ public class UserController {
         log.info("End getCustomersWithAccount method");
         return responseEntity;
     }
+
+    @GetMapping("/userById/{id}")
+    public ResponseEntity<CommonResponse> getUserById(@PathVariable("id") int id){
+        log.info("Start getActiveManagers method");
+        ResponseEntity<CommonResponse> responseEntity = null;
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            responseEntity = userService.getUserById(id);
+        } catch (Exception ex) {
+            commonResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            log.error(ex.getMessage());
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        log.info("End getActiveManagers method");
+        return responseEntity;
+    }
 }

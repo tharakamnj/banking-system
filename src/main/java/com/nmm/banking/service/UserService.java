@@ -19,4 +19,6 @@ public interface UserService {
     ResponseEntity<CommonResponse> getActiveManagers();
 
     ResponseEntity<CommonResponse> getCustomersWithAccount();
+
+    ResponseEntity<CommonResponse> getUserById(int id);
 }
