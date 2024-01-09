@@ -3,6 +3,8 @@ package com.nmm.banking.service.impl;
 import com.nmm.banking.dto.AuthResponse;
 import com.nmm.banking.dto.AuthenticationRequest;
 import com.nmm.banking.dto.UserDto;
+import com.nmm.banking.dto.UserWithAccountResponse;
+import com.nmm.banking.entity.Account;
 import com.nmm.banking.entity.User;
 import com.nmm.banking.repository.AccountRepository;
 import com.nmm.banking.repository.UserRepository;
@@ -183,15 +185,31 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<CommonResponse> getCustomersWithAccount() {
         log.info("Start getCustomersWithAccount method");
         CommonResponse commonResponse = new CommonResponse();
-        Set<Integer> ids = accountRepository.findAllUserIds();
-        List<User> users = userRepository.findAllById(ids);
-        if (users.isEmpty()){
+        List<UserWithAccountResponse> userWithAccountResponseList = new ArrayList<>();
+        Set<Integer> ids = userRepository.userIdsOfAccountHolders(true);
+
+        if (ids.isEmpty()){
             commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
             commonResponse.setErrorMessages(Collections.singletonList("Not found customers"));
             return new ResponseEntity<>(commonResponse,HttpStatus.NOT_FOUND);
         }
+
+        for (int userId:ids) {
+            Account accounts = accountRepository.findAccountByUser(userId);
+
+            UserWithAccountResponse userResponse = new UserWithAccountResponse(
+                    accounts.getUser().getUserName(),
+                    accounts.getUser().getFirstName(),
+                    accounts.getUser().getLastName(),
+                    accounts.getUser().getEmail(),
+                    accounts.getAccountId(),
+                    accounts.getAccountNo(),
+                    accounts.getAvailableBalance()
+            );
+            userWithAccountResponseList.add(userResponse);
+        }
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
-        commonResponse.setPayload(Collections.singletonList(users));
+        commonResponse.setPayload(Collections.singletonList(userWithAccountResponseList));
         log.info("End getCustomersWithAccount method");
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }

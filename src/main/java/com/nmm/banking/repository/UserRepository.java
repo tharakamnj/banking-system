@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
@@ -19,4 +20,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     @Query(value = "SELECT c FROM User c WHERE c.userName = ?1")
     User findByUserName(String username);
+
+    @Query(value = "SELECT c.userId FROM User c WHERE c.account = ?1")
+    Set<Integer> userIdsOfAccountHolders(boolean account);
 }
