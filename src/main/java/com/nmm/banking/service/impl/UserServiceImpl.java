@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
                     encoder().encode(dto.getPassword()),
                     dto.getRoles(),
                     dto.isStatus(),
+                    false,
                     dto.getCreatedBy(),
                     new Date(),
                     dto.getModifiedBy(),

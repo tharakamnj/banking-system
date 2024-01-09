@@ -34,6 +34,7 @@ public class User {
     private String password;
     private Role roles;
     private boolean status;
+    private boolean account;
 
     private String createdBy;
 

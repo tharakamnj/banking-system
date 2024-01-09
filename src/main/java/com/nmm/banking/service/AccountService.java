@@ -8,4 +8,6 @@ public interface AccountService {
     ResponseEntity<CommonResponse> saveAccount(AccountDto dto);
 
     ResponseEntity<CommonResponse> findAccount(int id);
+
+    ResponseEntity<CommonResponse> findAccountByUser(int userId);
 }
