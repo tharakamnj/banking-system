@@ -10,4 +10,6 @@ public interface AccountService {
     ResponseEntity<CommonResponse> findAccount(int id);
 
     ResponseEntity<CommonResponse> findAccountByUser(int userId);
+
+    ResponseEntity<CommonResponse> findAllAccounts();
 }

@@ -73,4 +73,21 @@ public class AccountController {
         return responseEntity;
     }
 
+    @GetMapping("/accounts")
+    public ResponseEntity<CommonResponse> findAllAccounts(){
+        log.info("Start findAllAccounts method");
+        ResponseEntity<CommonResponse> responseEntity = null;
+        CommonResponse commonResponse = new CommonResponse();
+        try {
+            responseEntity = accountService.findAllAccounts();
+        } catch (Exception ex) {
+            commonResponse.setStatus(HttpStatus.EXPECTATION_FAILED.value());
+            commonResponse.setErrorMessages(Collections.singletonList(ex.getMessage()));
+            log.error(ex.getMessage());
+            return new ResponseEntity<>(commonResponse, HttpStatus.EXPECTATION_FAILED);
+        }
+        log.info("End findAllAccounts method");
+        return responseEntity;
+    }
+
 }

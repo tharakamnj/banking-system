@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -87,6 +88,24 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findAccountByUser(userId);
 
         commonResponse.setPayload(Collections.singletonList(account));
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        log.info("End findAccount method");
+        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CommonResponse> findAllAccounts() {
+        log.info("Start findAccount method ");
+        CommonResponse commonResponse = new CommonResponse();
+        List<Account> accounts = accountRepository.findAll();
+        if (accounts.isEmpty()){
+            commonResponse.setErrorMessages(Collections.singletonList("not found accounts"));
+            commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
+            log.info("End findAccount method");
+            return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+        }
+
+        commonResponse.setPayload(Collections.singletonList(accounts));
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
         log.info("End findAccount method");
         return new ResponseEntity<>(commonResponse, HttpStatus.OK);
