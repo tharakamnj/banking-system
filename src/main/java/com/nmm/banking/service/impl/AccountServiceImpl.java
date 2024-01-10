@@ -43,7 +43,7 @@ public class AccountServiceImpl implements AccountService {
         CommonResponse commonResponse = new CommonResponse();
 
         User user = userRepository.findById(Integer.valueOf(dto.getUserId())).get();
-        Branch branch = branchRepository.findByUserId(user.getUserId());
+        Branch branch = branchRepository.findByBranchManagerUserId(user.getUserId());
 
         Account account = accountRepository.save(new Account(
                 dto.getAccountId(),
@@ -85,7 +85,7 @@ public class AccountServiceImpl implements AccountService {
     public ResponseEntity<CommonResponse> findAccountByUser(int userId) {
         log.info("Start findAccount method ");
         CommonResponse commonResponse = new CommonResponse();
-        Account account = accountRepository.findAccountByUser(userId);
+        Account account = accountRepository.findAccountByUserUserId(userId);
 
         commonResponse.setPayload(Collections.singletonList(account));
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
