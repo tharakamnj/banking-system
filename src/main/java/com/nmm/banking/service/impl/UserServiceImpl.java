@@ -249,6 +249,7 @@ public class UserServiceImpl implements UserService {
                     user.getLastName(),
                     user.getNic(),
                     user.getEmail(),
+                    user.isStatus(),
                     account
             );
             userResponseList.add(userResponse);

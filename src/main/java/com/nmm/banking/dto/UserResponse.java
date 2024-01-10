@@ -14,5 +14,6 @@ public class UserResponse {
     private String lastName;
     private String nic;
     private String email;
+    private boolean status;
     private Account account;
 }
