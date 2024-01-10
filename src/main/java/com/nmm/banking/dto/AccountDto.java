@@ -17,6 +17,7 @@ public class AccountDto {
     private double availableBalance;
     private boolean status;
     private String userId;
+    private int branchId;
     private String createdBy;
     private Date createdDate;
     private String modifiedBy;

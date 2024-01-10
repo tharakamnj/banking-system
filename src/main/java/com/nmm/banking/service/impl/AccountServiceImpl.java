@@ -43,7 +43,7 @@ public class AccountServiceImpl implements AccountService {
         CommonResponse commonResponse = new CommonResponse();
 
         User user = userRepository.findById(Integer.valueOf(dto.getUserId())).get();
-        Branch branch = branchRepository.findByBranchManagerUserId(user.getUserId());
+        Branch branch = branchRepository.findById(dto.getBranchId()).get();
 
         Account account = accountRepository.save(new Account(
                 dto.getAccountId(),

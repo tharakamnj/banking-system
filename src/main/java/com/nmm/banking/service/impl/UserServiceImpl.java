@@ -1,9 +1,6 @@
 package com.nmm.banking.service.impl;
 
-import com.nmm.banking.dto.AuthResponse;
-import com.nmm.banking.dto.AuthenticationRequest;
-import com.nmm.banking.dto.UserDto;
-import com.nmm.banking.dto.UserWithAccountResponse;
+import com.nmm.banking.dto.*;
 import com.nmm.banking.entity.Account;
 import com.nmm.banking.entity.User;
 import com.nmm.banking.repository.AccountRepository;
@@ -227,6 +224,38 @@ public class UserServiceImpl implements UserService {
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
         commonResponse.setPayload(Collections.singletonList(user));
         log.info("End getUserById method");
+        return new ResponseEntity<>(commonResponse,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CommonResponse> getCustomerAccount() {
+        log.info("Start getCustomerAccount method");
+        CommonResponse commonResponse = new CommonResponse();
+        List<UserResponse> userResponseList = new ArrayList<>();
+        List<User> users = userRepository.findAll();
+
+        if (users.isEmpty()){
+            commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
+            commonResponse.setErrorMessages(Collections.singletonList("Not found customers"));
+            return new ResponseEntity<>(commonResponse,HttpStatus.NOT_FOUND);
+        }
+
+        for (User user: users) {
+            Account account = accountRepository.findAccountByUserUserId(user.getUserId());
+            account.setUser(null);
+            UserResponse userResponse = new UserResponse(
+                    user.getUserName(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getNic(),
+                    user.getEmail(),
+                    account
+            );
+            userResponseList.add(userResponse);
+        }
+        commonResponse.setStatus(CommonConst.SUCCESS_CODE);
+        commonResponse.setPayload(Collections.singletonList(userResponseList));
+        log.info("End getCustomerAccount method");
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }
 }
