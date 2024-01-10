@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
         }
 
         for (int userId:ids) {
-            Account accounts = accountRepository.findAccountByUser(userId);
+            Account accounts = accountRepository.findAccountByUserUserId(userId);
 
             UserWithAccountResponse userResponse = new UserWithAccountResponse(
                     accounts.getUser().getUserName(),

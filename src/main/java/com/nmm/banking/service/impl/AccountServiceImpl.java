@@ -84,7 +84,7 @@ public class AccountServiceImpl implements AccountService {
     public ResponseEntity<CommonResponse> findAccountByUser(int userId) {
         log.info("Start findAccount method ");
         CommonResponse commonResponse = new CommonResponse();
-        Account account = accountRepository.findAccountByUser(userId);
+        Account account = accountRepository.findAccountByUserUserId(userId);
 
         commonResponse.setPayload(Collections.singletonList(account));
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);

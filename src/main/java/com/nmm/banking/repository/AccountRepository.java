@@ -13,6 +13,6 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
     @Query(value = "select u.userId from user u",nativeQuery = true)
     Set<Integer> findAllUserIds();
 
-    @Query(value = "select u from user u where u.userId = ?1",nativeQuery = true)
-    Account findAccountByUser(int userId);
+//    @Query(value = "select * from user where userId = ?1",nativeQuery = true)
+    Account findAccountByUserUserId(int userId);
 }
