@@ -108,7 +108,7 @@ public class UserController {
         return responseEntity;
     }
 
-    @GetMapping("/customers/account")
+    /*@GetMapping("/customers/account")
     public ResponseEntity<CommonResponse> getCustomerAccount(){
         log.info("Start getCustomerAccount method");
         ResponseEntity<CommonResponse> responseEntity = null;
@@ -123,5 +123,5 @@ public class UserController {
         }
         log.info("End getCustomerAccount method");
         return responseEntity;
-    }
+    }*/
 }

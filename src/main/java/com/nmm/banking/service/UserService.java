@@ -22,5 +22,5 @@ public interface UserService {
 
     ResponseEntity<CommonResponse> getUserById(int id);
 
-    ResponseEntity<CommonResponse> getCustomerAccount();
+    //ResponseEntity<CommonResponse> getCustomerAccount();
 }

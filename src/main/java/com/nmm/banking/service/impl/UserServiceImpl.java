@@ -106,14 +106,45 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<CommonResponse> getAllUsersByRole(Role role) {
         log.info("Start getAllUsersByRole method");
         CommonResponse commonResponse = new CommonResponse();
+        List<UserResponse> userResponseList = new ArrayList<>();
         List<User> users = userRepository.findByRoles(role);
+
         if (users.isEmpty()){
             commonResponse.setStatus(CommonConst.NOT_FOUND_RECORD);
             commonResponse.setErrorMessages(Collections.singletonList("Not found users"));
             return new ResponseEntity<>(commonResponse,HttpStatus.NOT_FOUND);
         }
+
+        for (User user: users) {
+            Account account = new Account();
+            if (user.isAccount()){
+                account = accountRepository.findAccountByUserUserId(user.getUserId());
+                account.setUser(null);
+            }
+            UserResponse userResponse = new UserResponse(
+                    user.getUserId(),
+                    user.getTitle(),
+                    user.getFirstName(),
+                    user.getMiddleName(),
+                    user.getLastName(),
+                    user.getNic(),
+                    user.getEmail(),
+                    user.getMobile(),
+                    user.getUserName(),
+                    user.getRoles(),
+                    user.isStatus(),
+                    user.isAccount(),
+                    user.getCreatedBy(),
+                    user.getCreatedDate(),
+                    user.getModifiedBy(),
+                    user.getModifiedDate(),
+                    user.isAccount() ? account : null
+            );
+            userResponseList.add(userResponse);
+        }
+
         commonResponse.setStatus(CommonConst.SUCCESS_CODE);
-        commonResponse.setPayload(Collections.singletonList(users));
+        commonResponse.setPayload(Collections.singletonList(userResponseList));
         log.info("End getAllUsersByRole method");
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }
@@ -227,7 +258,7 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
     }
 
-    @Override
+    /*@Override
     public ResponseEntity<CommonResponse> getCustomerAccount() {
         log.info("Start getCustomerAccount method");
         CommonResponse commonResponse = new CommonResponse();
@@ -258,5 +289,5 @@ public class UserServiceImpl implements UserService {
         commonResponse.setPayload(Collections.singletonList(userResponseList));
         log.info("End getCustomerAccount method");
         return new ResponseEntity<>(commonResponse,HttpStatus.OK);
-    }
+    }*/
 }
